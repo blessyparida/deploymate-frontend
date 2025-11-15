@@ -1,20 +1,10 @@
-/* src/app/globals.css */
+@import "tailwindcss";
+
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
+  --background: #0f172a; /* slate-950 */
+  --foreground: #f1f5f9; /* slate-100 */
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
-body {
-  height: 100%;
-  width: 100%;
-  font-family: sans-serif;
-  background-color: var(--background);
-  color: var(--foreground);
+html, body {
+  @apply min-h-screen bg-[var(--background)] text-[var(--foreground)] m-0 p-0;
 }

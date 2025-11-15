@@ -14,7 +14,7 @@ const handleAnalyze = async (repoUrl: string) => {
   setError(null);
   setResult(null);
 
-  // ⏳ Step 1: Create a 15s timeout promise
+  //  Step 1: Create a 15s timeout promise
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(() => reject(new Error("This is taking longer than usual. Please try again later.")), 15000)
   );
