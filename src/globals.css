@@ -1,0 +1,18 @@
+/* globals.css */
+
+/* Global body styles */
+body {
+  @apply bg-gray-100 text-gray-900 font-sans;
+}
+
+/* Example container */
+.container {
+  @apply max-w-7xl mx-auto px-4;
+}
+
+/* Example button */
+.btn-primary {
+  @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition;
+}
+
+/* Add any other global custom styles here */
