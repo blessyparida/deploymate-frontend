@@ -1,18 +1,19 @@
-/* globals.css */
+/* src/globals.css */
+@import "tailwindcss";
 
-/* Global body styles */
-body {
-  @apply bg-gray-100 text-gray-900 font-sans;
+:root {
+  --background: #0f172a; 
+  --foreground: #f1f5f9; 
 }
 
-/* Example container */
+html, body {
+  @apply min-h-screen bg-[var(--background)] text-[var(--foreground)] m-0 p-0 font-sans;
+}
+
 .container {
   @apply max-w-7xl mx-auto px-4;
 }
 
-/* Example button */
 .btn-primary {
   @apply px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition;
 }
-
-/* Add any other global custom styles here */
