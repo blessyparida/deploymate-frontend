@@ -12,18 +12,16 @@ export interface AnalyzeResponse {
   error?: string;
 }
 
-/**
- * Calls your backend API to analyze a repo.
- */
 export async function analyzeRepo(repoUrl: string): Promise<AnalyzeResponse> {
-  const res = await fetch("http://localhost:3001/api/github/analyze", 
- {
+  const BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+  const res = await fetch(`${BASE_URL}/api/github/analyze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ repoUrl }),
   });
 
-  // Handle non-2xx responses cleanly
   if (!res.ok) {
     const errText = await res.text();
     return {
@@ -32,6 +30,5 @@ export async function analyzeRepo(repoUrl: string): Promise<AnalyzeResponse> {
     };
   }
 
-  const data = await res.json();
-  return data;
+  return res.json();
 }
