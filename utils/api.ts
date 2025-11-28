@@ -13,9 +13,13 @@ export interface AnalyzeResponse {
 }
 
 export async function analyzeRepo(repoUrl: string): Promise<AnalyzeResponse> {
-  const BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+  // Define BASE_URL first
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
 
+  // Log the BASE_URL to see what value is being picked
+  console.log("BASE_URL >>>", BASE_URL);
+
+  // Then call fetch
   const res = await fetch(`${BASE_URL}/api/github/analyze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
