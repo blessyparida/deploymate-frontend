@@ -22,7 +22,9 @@ export async function analyzeRepo(repoUrl: string): Promise<AnalyzeResponse> {
   // Then call fetch
   const res = await fetch(`${BASE_URL}/api/github/analyze`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+    'Content-Type': 'application/json',
+  },
     body: JSON.stringify({ repoUrl }),
   });
 
