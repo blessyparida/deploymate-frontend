@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface RepoInputProps {
   onResult: (repoUrl: string) => void;
@@ -8,18 +8,29 @@ interface RepoInputProps {
 const RepoInput: React.FC<RepoInputProps> = ({ onResult }) => {
   const [repoUrl, setRepoUrl] = useState("");
   const [error, setError] = useState("");
+  const [isGitHubConnected, setIsGitHubConnected] = useState(false);
+
+  //check
+  useEffect(() => {
+    const installationId = localStorage.getItem("github_installation_id");
+    setIsGitHubConnected(!!installationId);
+  }, []);
 
   const handleAnalyze = () => {
     setError("");
+
+    if (!isGitHubConnected) {
+      setError("Please connect GitHub before analyzing a repository.");
+      return;
+    }
+
     const cleaned = repoUrl.trim();
 
-    // ✅ Step 1: Empty check
     if (!cleaned) {
       setError("Please enter a GitHub repository URL.");
       return;
     }
 
-    // ✅ Step 2: GitHub URL validation
     const githubUrlPattern =
       /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\/)?$/;
 
@@ -30,8 +41,16 @@ const RepoInput: React.FC<RepoInputProps> = ({ onResult }) => {
       return;
     }
 
-    // ✅ Step 3: If all good, proceed
     onResult(cleaned);
+  };
+
+  const handleConnectGitHub = () => {
+    const githubAppSlug = "deploymate-auto"; 
+    const redirectUrl = `${window.location.origin}/github/install`;
+
+    window.location.href = `https://github.com/apps/${githubAppSlug}/installations/new?redirect_uri=${encodeURIComponent(
+      redirectUrl
+    )}`;
   };
 
   return (
@@ -55,20 +74,37 @@ const RepoInput: React.FC<RepoInputProps> = ({ onResult }) => {
       />
 
       {error && (
-        <div className="text-rose-400 text-sm mt-2 animate-pulse">{error}</div>
+        <div className="text-rose-400 text-sm mt-2">{error}</div>
       )}
 
+      {/* Analyze */}
       <button
         onClick={handleAnalyze}
-        disabled={!repoUrl}
+        disabled={!repoUrl || !isGitHubConnected}
         className={`mt-5 w-full py-3 rounded-md font-medium transition-all duration-200 ${
-          !repoUrl
+          !repoUrl || !isGitHubConnected
             ? "bg-slate-600 text-slate-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white shadow-md hover:shadow-lg"
+            : "bg-blue-500 hover:bg-blue-600 text-white shadow-md"
         }`}
       >
         Analyze Repository
       </button>
+
+      {/* Connect GitHub */}
+      {!isGitHubConnected && (
+        <button
+          onClick={handleConnectGitHub}
+          className="mt-4 w-full py-3 rounded-md bg-green-500 hover:bg-green-600 text-white font-medium shadow-md"
+        >
+          Connect GitHub
+        </button>
+      )}
+
+      {isGitHubConnected && (
+        <div className="mt-4 text-sm text-green-400 text-center">
+          GitHub connected
+        </div>
+      )}
     </div>
   );
 };

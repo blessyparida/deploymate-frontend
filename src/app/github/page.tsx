@@ -15,19 +15,19 @@ const handleAnalyze = async (repoUrl: string) => {
   setError(null);
   setResult(null);
 
-  //  Step 1: Create a 15s timeout promise
+
   const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("This is taking longer than usual. Please try again later.")), 15000)
+    setTimeout(() => reject(new Error("This is taking longer than usual. Please try again later.")), 70000)
   );
 
   try {
-    // ⏱ Step 2: Race between API call and timeout
+    // Race between API call and timeout
     const res = await Promise.race([analyzeRepo(repoUrl), timeoutPromise]);
     setResult(res);
   } catch (err: any) {
     console.error("Frontend error:", err);
 
-    // 🧠 Step 3: User-friendly error handling
+    
     if (err.message.includes("Failed to fetch")) {
       setError("Couldn’t reach the backend server. Please check your connection or try again later.");
     } else if (err.message.includes("timeout")) {
@@ -44,7 +44,7 @@ const handleAnalyze = async (repoUrl: string) => {
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col items-center p-8">
       <h1 className="text-3xl font-bold mb-2"> Drop a Repo. Get Deployment Ready.</h1>
       <p className="text-slate-400 mb-8 text-center max-w-lg">
-       Analyze, configure, and deploy — all from a single GitHub URL.
+       Analyze, configure, and deploy from a single GitHub URL.
       </p>
 
       <RepoInput onResult={handleAnalyze} />

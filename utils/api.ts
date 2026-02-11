@@ -2,39 +2,49 @@ export interface AnalyzeResponse {
   success: boolean;
   repo?: string;
   branch?: string;
-  detected?: Record<string, string>;
-  generated?: string[];
+
+  detectedStack?: {
+    languages: string[];
+    frameworks: string[];
+    deployment?: string;
+  };
+
+  generatedConfigs?: Record<string, any>;
+
   pullRequest?: {
     success: boolean;
-    prUrl?: string;
+    message?: string;
+    simulated?: boolean;
     error?: string;
   }[];
+
   error?: string;
 }
 
 export async function analyzeRepo(repoUrl: string): Promise<AnalyzeResponse> {
-  // Define BASE_URL first
-  const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  if (!BASE_URL) {
+    return { success: false, error: "API base URL not configured" };
+  }
 
-  // Log the BASE_URL to see what value is being picked
-  console.log("BASE_URL >>>", BASE_URL);
+  const installationId = localStorage.getItem("github_installation_id");
+  if (!installationId) {
+    return { success: false, error: "GitHub not connected. Please install the GitHub App." };
+  }
 
-  // Then call fetch
   const res = await fetch(`${BASE_URL}/api/github/analyze`, {
     method: "POST",
-    headers: {
-    'Content-Type': 'application/json',
-  },
-    body: JSON.stringify({ repoUrl }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      repoUrl,
+      installationId: Number(installationId), 
+    }),
   });
 
   if (!res.ok) {
     const errText = await res.text();
-    return {
-      success: false,
-      error: `Server Error: ${res.status} - ${errText}`,
-    };
+    return { success: false, error: `Server Error: ${res.status} - ${errText}` };
   }
 
-  return res.json();
+  return await res.json(); 
 }
